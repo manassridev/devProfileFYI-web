@@ -1,7 +1,11 @@
+import UserProfile from "./UserProfile";
+
 function Profile() {
   return (
     <>
-      <div>Profile</div>
+      <div>
+        <UserProfile />
+      </div>
     </>
   );
 }

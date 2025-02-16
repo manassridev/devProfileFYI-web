@@ -5,9 +5,11 @@ import { BASE_URL } from "../../utils/constants";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { removeUser } from "../../utils/userSlice";
+import { removeFeed } from "../../utils/feedSlice";
 
 function Navbar() {
   const data = useSelector((state) => state.user);
+  const feed = useSelector((store) => store.feed);
   const userData = data?.data;
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -16,6 +18,7 @@ function Navbar() {
     try {
       await axios.post(`${BASE_URL}/logout`, {}, { withCredentials: true });
       dispatch(removeUser(data));
+      dispatch(removeFeed(feed));
       navigate("/login");
     } catch (err) {
       console.error(err);
@@ -32,7 +35,7 @@ function Navbar() {
       </div>
       {data && (
         <div className="flex-none gap-2">
-          <span>{`Welcome ${userData?.firstName}`}</span>
+          <span className="text-white">{`Welcome ${userData?.firstName}`}</span>
           <div className="dropdown dropdown-end">
             <div
               tabIndex={0}
@@ -51,10 +54,14 @@ function Navbar() {
               className="menu menu-sm dropdown-content bg-slate-400 text-black rounded-box z-[1] mt-3 w-52 p-2 shadow"
             >
               <li>
-                <a className="justify-between">
+                <Link to={{ pathname: "/profile" }} className="justify-between">
                   Profile
-                  <span className="badge">New</span>
-                </a>
+                </Link>
+              </li>
+              <li>
+                <Link to={{ pathname: "/feed" }} className="justify-between">
+                  My Feed
+                </Link>
               </li>
               <li>
                 <a>Settings</a>
