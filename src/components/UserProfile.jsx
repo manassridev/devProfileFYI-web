@@ -133,7 +133,7 @@ function UserProfile() {
       {showAlert && (
         <div className="toast toast-top toast-center">
           <div className="alert alert-success">
-            <span>Message sent successfully.</span>
+            <span>Profile saved successfully</span>
           </div>
         </div>
       )}

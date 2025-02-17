@@ -64,7 +64,12 @@ function Navbar() {
                 </Link>
               </li>
               <li>
-                <a>Settings</a>
+                <Link
+                  to={{ pathname: "/connections" }}
+                  className="justify-between"
+                >
+                  Connections
+                </Link>
               </li>
               <li>
                 <a onClick={handleLogout}>Logout</a>
