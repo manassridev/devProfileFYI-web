@@ -7,34 +7,60 @@ import { useNavigate } from "react-router";
 import { BASE_URL } from "../utils/constants";
 
 function Login() {
-  const [emailID, setEmailID] = useState("manassri@gmail.com");
-  const [password, setPassword] = useState("Manas@1234");
+  const [emailID, setEmailID] = useState("");
+  const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [isLoginForm, setLoginForm] = useState(true);
   const [error, setError] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleClick = async () => {
-    try {
-      const loggedInUser = await axios.post(
-        `${BASE_URL}/login`,
-        {
-          email: emailID,
-          password: password,
-        },
-        { withCredentials: true }
-      );
-      setIsLoggedIn(true);
-      setEmailID("");
-      setPassword("");
-      setShowAlert(true);
-      dispatch(addUser(loggedInUser));
-      navigate("/feed");
-    } catch (err) {
-      setError(err?.response?.data);
-      console.error(err);
+    if (isLoginForm) {
+      try {
+        const loggedInUser = await axios.post(
+          `${BASE_URL}/login`,
+          {
+            email: emailID,
+            password: password,
+          },
+          { withCredentials: true }
+        );
+        setIsLoggedIn(true);
+        setEmailID("");
+        setPassword("");
+        setShowAlert(true);
+        dispatch(addUser(loggedInUser));
+        navigate("/feed");
+      } catch (err) {
+        setError(err?.response?.data);
+        console.error(err);
+      }
+    } else {
+      try {
+        const res = await axios.post(
+          `${BASE_URL}/signup`,
+          {
+            firstName: firstName,
+            lastName: lastName,
+            email: emailID,
+            password: password,
+          },
+          { withCredentials: true }
+        );
+        dispatch(addUser(res?.data?.data));
+        navigate("/profile");
+      } catch (err) {
+        console.error(err);
+      }
     }
+  };
+
+  const handleLoginAndSingup = () => {
+    setLoginForm(!isLoginForm);
   };
 
   useEffect(() => {
@@ -52,7 +78,35 @@ function Login() {
       <div className="flex justify-center items-center h-screen">
         <div className="card bg-primary text-primary-content w-96">
           <div className="card-body flex items-center">
-            <h2 className="card-title text-2xl">Login</h2>
+            <h2 className="card-title text-2xl">
+              {isLoginForm ? "Login" : "Sign up"}
+            </h2>
+            {!isLoginForm && (
+              <>
+                <div className="">
+                  <label className="label font-semibold">First Name</label>
+                  <label className="input input-bordered flex items-center gap-2 bg-white w-60">
+                    <input
+                      type="text"
+                      className="grow"
+                      onChange={(e) => setFirstName(e.target.value)}
+                      value={firstName}
+                    />
+                  </label>
+                </div>
+                <div className="">
+                  <label className="label font-semibold">Last Name</label>
+                  <label className="input input-bordered flex items-center gap-2 bg-white w-60">
+                    <input
+                      type="text"
+                      className="grow"
+                      onChange={(e) => setLastName(e.target.value)}
+                      value={lastName}
+                    />
+                  </label>
+                </div>
+              </>
+            )}
             <div className="">
               <label className="label font-semibold">Email</label>
               <label className="input input-bordered flex items-center gap-2 bg-white">
@@ -99,8 +153,13 @@ function Login() {
             <span className="text-red-600 font-semibold">{error}</span>
             <div className="card-actions justify-end">
               <button onClick={handleClick} className="btn">
-                Login
+                {isLoginForm ? "Login" : "Sign up"}
               </button>
+            </div>
+            <div className="card-actions justify-end">
+              <p onClick={handleLoginAndSingup}>
+                {isLoginForm ? "New User? Sign up" : "Already a user? Login"}
+              </p>
             </div>
           </div>
         </div>

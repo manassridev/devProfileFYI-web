@@ -28,10 +28,13 @@ function Navbar() {
   return (
     <div className="navbar bg-primary">
       <div className="flex-1">
-        <a className="btn btn-ghost text-xl bg-slate-50">
+        <Link
+          to={{ pathname: "/feed" }}
+          className="btn btn-ghost text-xl bg-slate-50"
+        >
           <img className="h-7" src="../favicon.png"></img>
           <span>DevProfileFYI</span>
-        </a>
+        </Link>
       </div>
       {data && (
         <div className="flex-none gap-2">
@@ -59,16 +62,19 @@ function Navbar() {
                 </Link>
               </li>
               <li>
-                <Link to={{ pathname: "/feed" }} className="justify-between">
-                  My Feed
-                </Link>
-              </li>
-              <li>
                 <Link
                   to={{ pathname: "/connections" }}
                   className="justify-between"
                 >
                   Connections
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to={{ pathname: "/requests" }}
+                  className="justify-between"
+                >
+                  Requests
                 </Link>
               </li>
               <li>

@@ -24,6 +24,8 @@ function Feed() {
   useEffect(() => {
     getFeed();
   }, []);
+  if (!feed || feed.length <= 0)
+    return <h1 className="flex justify-center my-3">Feed over!!</h1>;
   return <div>{feed && <Card data={feed[0]} />}</div>;
 }
 export default Feed;

@@ -1,8 +1,35 @@
+import axios from "axios";
+import { BASE_URL } from "../../utils/constants";
+import { useDispatch } from "react-redux";
+import { removeUserFromFeed } from "../../utils/feedSlice";
+
 // eslint-disable-next-line react/prop-types
 const Card = ({ data }) => {
   // eslint-disable-next-line react/prop-types
-  const { firstName, lastName, photoUrl, bio, keySkills, age, genderLabel } =
-    data;
+  const {
+    _id,
+    firstName,
+    lastName,
+    photoUrl,
+    bio,
+    keySkills,
+    age,
+    genderLabel,
+  } = data;
+  const dispatch = useDispatch();
+
+  const handleUserActions = async (action, id) => {
+    try {
+      const res = axios.post(
+        `${BASE_URL}/request/send/${action}/${id}`,
+        {},
+        { withCredentials: true }
+      );
+      dispatch(removeUserFromFeed(id));
+    } catch (err) {
+      console.error(err);
+    }
+  };
   return (
     <div className="flex justify-center my-3">
       <div className="card bg-primary w-96 shadow-xl">
@@ -23,10 +50,16 @@ const Card = ({ data }) => {
           <p className="text-black">{bio}</p>
           <p>{keySkills?.map((val) => val).join(", ")}</p>
           <div className="card-actions justify-end">
-            <button className="btn bg-red-500 border-red-500 text-white">
+            <button
+              className="btn bg-red-500 border-red-500 text-white"
+              onClick={() => handleUserActions("ignored", _id)}
+            >
               IGNORE
             </button>
-            <button className="btn btn-active btn-accent text-white">
+            <button
+              className="btn btn-active btn-accent text-white"
+              onClick={() => handleUserActions("interested", _id)}
+            >
               SEND REQUEST
             </button>
           </div>
